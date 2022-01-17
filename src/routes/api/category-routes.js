@@ -43,47 +43,44 @@ router.get("/:id", async (req, res) => {
     }
     return res.json(renderSingleCategory);
   } catch (error) {
-    console.error(`[ERROR]: failed to render categories by id | ${error.message}`);
+    console.error(
+      `[ERROR]: failed to render categories by id | ${error.message}`
+    );
     return res.status(500).json({ error: "failed to render categories by id" });
   }
 });
 
 router.post("/", async (req, res) => {
- try {
-   const createCategory = await Category.create(req.body);
-   return res.json(createCategory);
-
- }
- catch (error) {
-  console.error(`[ERROR]: failed to create categories  | ${error.message}`);
-  return res.status(500).json({ error: "failed to create categories" });
-
-
+  try {
+    const createCategory = await Category.create(req.body);
+    return res.json(createCategory);
+  } catch (error) {
+    console.error(`[ERROR]: failed to create categories  | ${error.message}`);
+    return res.status(500).json({ error: "failed to create categories" });
+  }
 });
 
-router.put("/:id",  async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
-    const updateCategory = await Category.findByPk(req.params.id)
+    const updateCategory = await Category.findByPk(req.params.id);
 
-    if(!updateCategory) {
-      return res.status(404).json({ message: "can not update category"
-    
-      });
+    if (!updateCategory) {
+      return res.status(404).json({ message: "can not update category" });
     }
 
     await Category.update(req.body, {
-        where: {
-          id: req.params.id,
-        },
-      })
-    
-    return res.json({ message: "updated category"})
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    return res.json({ message: "updated category" });
+  } catch (error) {
+    console.error(
+      `[ERROR]: failed to update categories by id | ${error.message}`
+    );
+    return res.status(500).json({ error: "failed to update categories by id" });
   }
-    catch (error) {
-      console.error(`[ERROR]: failed to update categories by id | ${error.message}`);
-      return res.status(500).json({ error: "failed to updater categories by id" });
-  }
-  
 });
 
 router.delete("/:id", async (req, res) => {
@@ -91,22 +88,20 @@ router.delete("/:id", async (req, res) => {
     const deleteCategory = await Category.findByPk(req.params.id);
 
     if (!deleteCategory) {
-      return res.status(404).json({message: 'could not find category'})
+      return res.status(404).json({ message: "could not find category" });
     }
     await Category.destroy({
       where: {
-        id: req.params.id
+        id: req.params.id,
       },
     });
-    return res.json({ message: " deleted category"});
-    
+    return res.json({ message: " deleted category" });
   } catch (error) {
-
-    console.error(`[ERROR]: failed to delete categories by id | ${error.message}`);
-      return res.status(500).json({ error: "failed to delete categories by id" });
-    
+    console.error(
+      `[ERROR]: failed to delete categories by id | ${error.message}`
+    );
+    return res.status(500).json({ error: "failed to delete categories by id" });
   }
-  
 });
 
 module.exports = router;
