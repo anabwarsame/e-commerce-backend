@@ -50,43 +50,36 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// create new product
 router.post("/", async (req, res) => {
-  
   try {
     const createProduct = await Product.create(req.body);
     return res.json(createProduct);
- 
+  } catch (error) {
+    console.error(`[ERROR]: failed to create product  | ${error.message}`);
+    return res.status(500).json({ error: "failed to create product" });
   }
-  catch (error) {
-   console.error(`[ERROR]: failed to create product  | ${error.message}`);
-   return res.status(500).json({ error: "failed to create product" });
- 
- 
- }
- );
+});
 
-  Product.create(req.body)
-    .then((product) => {
-      // if there's product tags, we need to create pairings to bulk create in the ProductTag model
-      if (req.body.tagIds.length) {
-        const productTagIdArr = req.body.tagIds.map((tag_id) => {
-          return {
-            product_id: product.id,
-            tag_id,
-          };
-        });
-        return ProductTag.bulkCreate(productTagIdArr);
-      }
-      // if no product tags, just respond
-      res.status(200).json(product);
-    })
-    .then((productTagIds) => res.status(200).json(productTagIds))
-    .catch((err) => {
-      console.log(err);
-      res.status(400).json(err);
-    });
-};
+Product.create(req.body)
+  .then((product) => {
+    // if there's product tags, we need to create pairings to bulk create in the ProductTag model
+    if (req.body.tagIds.length) {
+      const productTagIdArr = req.body.tagIds.map((tag_id) => {
+        return {
+          product_id: product.id,
+          tag_id,
+        };
+      });
+      return ProductTag.bulkCreate(productTagIdArr);
+    }
+    // if no product tags, just respond
+    res.status(200).json(product);
+  })
+  .then((productTagIds) => res.status(200).json(productTagIds))
+  .catch((err) => {
+    console.log(err);
+    res.status(400).json(err);
+  });
 
 // update product
 router.put("/:id", (req, res) => {
@@ -135,20 +128,19 @@ router.delete("/:id", async (req, res) => {
     const deleteProduct = await Category.findByPk(req.params.id);
 
     if (!deleteProduct) {
-      return res.status(404).json({message: 'could not find category'})
+      return res.status(404).json({ message: "could not find category" });
     }
     await Category.destroy({
       where: {
-        id: req.params.id
+        id: req.params.id,
       },
     });
-    return res.json({ message: " deleted category"});
-    
+    return res.json({ message: " deleted category" });
   } catch (error) {
-
-    console.error(`[ERROR]: failed to delete categories by id | ${error.message}`);
-      return res.status(500).json({ error: "failed to delete categories by id" });
-    
+    console.error(
+      `[ERROR]: failed to delete categories by id | ${error.message}`
+    );
+    return res.status(500).json({ error: "failed to delete categories by id" });
   }
 });
 
