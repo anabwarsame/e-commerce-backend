@@ -140,7 +140,7 @@ router.delete("/:id", async (req, res) => {
     console.error(
       `[ERROR]: failed to delete categories by id | ${error.message}`
     );
-    return res.status(500).json({ error: "failed to delete categories by id" });
+    return res.status(500).json({ error: "failed to delete product by id" });
   }
 });
 
