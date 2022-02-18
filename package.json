@@ -1,0 +1,31 @@
+{
+  "name": "e-commerce-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "seed": "node src/seeds/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anabwarsame/e-commerce-backend.git"
+  },
+  "keywords": [],
+  "author": "Anab Warsame",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anabwarsame/e-commerce-backend/issues"
+  },
+  "homepage": "https://github.com/anabwarsame/e-commerce-backend#readme",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.13.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
