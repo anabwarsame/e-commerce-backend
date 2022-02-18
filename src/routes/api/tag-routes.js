@@ -8,11 +8,13 @@ const router = Router();
 
 router.get("/", async (req, res) => {
   try {
-    const getTags = await Category.findAll({
-      include: {
-        model: Tag,
-        attributes: ["id", "product_name", "price", "stock", "category_id"],
-      },
+    const getTags = await Tag.findAll({
+      include: [
+        {
+          model: Product,
+          through: ProductTag,
+        },
+      ],
     });
 
     if (!getTags) {
@@ -27,11 +29,11 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const renderSingleTag = await Category.findByPk(req.params.id, {
+    const renderSingleTag = await Tag.findByPk(req.params.id, {
       include: [
         {
           model: Product,
-          attributes: ["id", "product_name", "price", "stock", "category_id"],
+          through: ProductTag,
         },
       ],
     });
@@ -48,7 +50,7 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const createTag = await Category.create(req.body);
+    const createTag = await Tag.create(req.body);
     return res.json(createTag);
   } catch (error) {
     console.error(`[ERROR]: failed to create tag  | ${error.message}`);
@@ -58,7 +60,7 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   try {
-    const updateTag = await Category.findByPk(req.params.id);
+    const updateTag = await Tag.findByPk(req.params.id);
 
     if (!updateTag) {
       return res.status(404).json({ message: "can not update category" });
@@ -77,9 +79,9 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
-    const deleteTag = await Category.findByPk(req.params.id);
+    const deleteTag = await Tag.findByPk(req.params.id);
 
     if (!deleteTag) {
       return res.status(404).json({ message: "could not find tag" });
